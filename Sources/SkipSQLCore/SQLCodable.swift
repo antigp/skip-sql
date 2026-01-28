@@ -157,7 +157,7 @@ public extension SQLContext {
                     // for insert with autoincrement primary key values, filter out zero so that pk fields don't need to be null
                     continue
                 }
-                if value == SQLValue.null {
+                if !col.nullable && col.defaultValue != nil && value == SQLValue.null {
                     continue
                 }
             }
