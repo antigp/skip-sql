@@ -4,49 +4,39 @@ import PackageDescription
 let package = Package(
     name: "skip-sql",
     defaultLocalization: "en",
-    platforms: [.iOS(.v15), .macOS(.v13), .tvOS(.v16), .watchOS(.v9), .macCatalyst(.v16)],
+    platforms: [.iOS(.v16), .macOS(.v13), .tvOS(.v16), .watchOS(.v9), .macCatalyst(.v16)],
     products: [
         .library(name: "SkipSQL", targets: ["SkipSQL"]),
         .library(name: "SkipSQLPlus", type: .dynamic, targets: ["SkipSQLPlus"]),
     ],
     dependencies: [
-//        .package(url: "https://source.skip.tools/skip.git", from: "1.1.11"),
-//        .package(url: "https://source.skip.tools/skip-foundation.git", from: "1.1.11"),
-//        .package(url: "https://source.skip.tools/skip-unit.git", from: "1.0.1"),
-//        .package(url: "https://source.skip.tools/skip-ffi.git", from: "1.0.0"),
+        .package(url: "https://source.skip.tools/skip.git", from: "1.1.11"),
+        .package(url: "https://source.skip.tools/skip-foundation.git", from: "1.1.11"),
+        .package(url: "https://source.skip.tools/skip-unit.git", from: "1.0.1"),
+        .package(url: "https://source.skip.tools/skip-ffi.git", from: "1.0.0"),
     ],
     targets: [
         .target(name: "SkipSQLCore", dependencies: [
-//            .product(name: "SkipFoundation", package: "skip-foundation"),
-//            .product(name: "SkipFFI", package: "skip-ffi")
-        ],
-//                plugins: [.plugin(name: "skipstone", package: "skip")]
-               ),
+            .product(name: "SkipFoundation", package: "skip-foundation"),
+            .product(name: "SkipFFI", package: "skip-ffi")
+        ], plugins: [.plugin(name: "skipstone", package: "skip")]),
         .target(name: "SkipSQL", dependencies: [
             "SkipSQLCore",
-        ],
-//                plugins: [.plugin(name: "skipstone", package: "skip")]
-               ),
+        ], plugins: [.plugin(name: "skipstone", package: "skip")]),
         .testTarget(name: "SkipSQLTests", dependencies: [
             "SkipSQL",
-//            .product(name: "SkipTest", package: "skip")
-        ],
-//                    plugins: [.plugin(name: "skipstone", package: "skip")]\
-                   ),
+            .product(name: "SkipTest", package: "skip")
+        ], plugins: [.plugin(name: "skipstone", package: "skip")]),
         .target(name: "SkipSQLPlus", dependencies: [
             "SkipSQLCore",
             "SQLExt",
-        ],
-//                plugins: [.plugin(name: "skipstone", package: "skip")]
-               ),
+        ], plugins: [.plugin(name: "skipstone", package: "skip")]),
         .testTarget(name: "SkipSQLPlusTests", dependencies: [
             "SkipSQLPlus",
-//            .product(name: "SkipTest", package: "skip")
-        ],
-//                    plugins: [.plugin(name: "skipstone", package: "skip")]
-                   ),
+            .product(name: "SkipTest", package: "skip")
+        ], plugins: [.plugin(name: "skipstone", package: "skip")]),
         .target(name: "SQLExt", dependencies: [
-//            .product(name: "SkipUnit", package: "skip-unit")
+            .product(name: "SkipUnit", package: "skip-unit")
         ],
             sources: ["sqlite", "libtomcrypt"],
             publicHeadersPath: "sqlite",
@@ -88,9 +78,8 @@ let package = Package(
                 .define("SQLCIPHER_CRYPTO_CUSTOM", to: "sqlcipher_ltc_setup"),
                 //.unsafeFlags(["-Wno-shorten-64-to-32", "-Wno-ambiguous-macro"]), // enabled manually in libs
             ],
-//            linkerSettings: [.linkedLibrary("log", .when(platforms: [.android]))],
-//            plugins: [.plugin(name: "skipstone", package: "skip")]
-        ),
+            linkerSettings: [.linkedLibrary("log", .when(platforms: [.android]))],
+            plugins: [.plugin(name: "skipstone", package: "skip")]),
     ]
 )
 
