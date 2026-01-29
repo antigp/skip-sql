@@ -204,7 +204,7 @@ public extension SQLContext {
             }
             expression.append(" ON CONFLICT(")
             // Dont check PK collums with empty/default value if PK more than one
-            expression.append(zip(pkColumns, pkValues).filter { $0.1 != SQLValue.defaultPrimaryKeyValue &&  $0.1 != SQLValue.null || pkColumns.count == 1 }.map({ $0.0.quotedName() } ).joined(separator: ", "))
+            expression.append(pkColumns.map({ $0.quotedName() } ).joined(separator: ", "))
             expression.append(") DO UPDATE SET ")
             for (index, col) in columns.enumerated() {
                 if index != 0 {
