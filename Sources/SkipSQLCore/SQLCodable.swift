@@ -178,18 +178,21 @@ public extension SQLContext {
         }
         var updateValueCount = 0
         for (col, value) in zip(columns, bindings) {
-            if updateValueCount > 0 {
-                expression.append(", ")
-            }
             if update {
                 if !col.primaryKey { // don't bother updating the primary key values, because these don't change
                     expression.append(col.quotedName() + " = ")
                     value.apply(to: &expression) // add the "?" and binding
                     updateValueCount += 1
+                    if col != columns.last {
+                        expression.append(", ")
+                    }
                 }
             } else {
                 value.apply(to: &expression) // add the "?" and binding
                 updateValueCount += 1
+                if col != columns.last {
+                    expression.append(", ")
+                }
             }
         }
         if !update {
