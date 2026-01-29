@@ -153,7 +153,7 @@ public extension SQLContext {
         // filter out any NULL values so that defaults defined in the column are used
         for (col, value) in zip(allColumns, allBindings) {
             if !update {
-                if col.primaryKey && col.autoincrement && value == SQLValue.defaultPrimaryKeyValue {
+                if col.autoincrement && value == SQLValue.defaultPrimaryKeyValue {
                     // for insert with autoincrement primary key values, filter out zero so that pk fields don't need to be null
                     continue
                 }
