@@ -1,6 +1,5 @@
-// Copyright 2023–2025 Skip
-// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-#if SKIP
+// Copyright 2023–2026 Skip
+#if SKIP && SKIP_SQL_KOTLIN
 import SkipFFI
 
 public typealias NativeLibrary = com.sun.jna.Library
@@ -22,7 +21,7 @@ public typealias sqlite3_pointer_type = OpaquePointer
 
 public typealias sqlite3_unsigned = Int32 // JNA has no UInt understanding
 
-#else
+#elseif !SKIP
 public typealias NativeLibrary = AnyObject
 public typealias NativeCallback = AnyObject
 
@@ -131,10 +130,10 @@ public protocol SQLiteLibrary : NativeLibrary {
 
     //func sqlite3_config(option: Int32, values: Object...) -> Int32
     func sqlite3_extended_result_codes(_ db: OpaquePointer, _ on: Int32) -> Int32
-    #if SKIP
+    #if SKIP && SKIP_SQL_KOTLIN
     // otherwise: 'sqlite3_free' hides member of supertype 'SQLiteLibrary' and needs an 'override' modifier.
     func sqlite3_free(_ ptr: OpaquePointer)
-    #else
+    #elseif !SKIP
     func sqlite3_free(_ ptr: sqlite3_pointer_type)
     #endif
 
