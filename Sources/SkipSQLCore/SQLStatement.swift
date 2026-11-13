@@ -1,6 +1,5 @@
-// Copyright 2023–2025 Skip
-// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
-#if SKIP
+// Copyright 2023–2026 Skip
+#if SKIP && SKIP_SQL_KOTLIN
 import SkipFFI
 #endif
 import Foundation
@@ -180,7 +179,7 @@ public final class SQLStatement {
             let length = SQLite3.sqlite3_column_bytes(stmnt, idx)
             #if !SKIP
             return Data(bytes: pointer, count: Int(length))
-            #else
+            #elseif SKIP && SKIP_SQL_KOTLIN
             let byteArray = pointer.getByteArray(0, length)
             return Data(platformValue: byteArray)
             #endif

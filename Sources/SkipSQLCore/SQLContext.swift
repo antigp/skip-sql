@@ -1,7 +1,6 @@
-// Copyright 2023–2025 Skip
-// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+// Copyright 2023–2026 Skip
 import Foundation
-#if SKIP
+#if SKIP && SKIP_SQL_KOTLIN
 import SkipFFI
 #endif
 
@@ -230,7 +229,7 @@ public class SQLContext {
     #if !SKIP
     typealias TraceBox = @convention(block) (UnsafeRawPointer) -> Void
     private typealias TraceHook = TraceBox
-    #else
+    #elseif SKIP && SKIP_SQL_KOTLIN
     private final class TraceHook : sqlite3_trace_hook {
         let action: TraceAction
         let context: SQLContext
@@ -278,7 +277,7 @@ public class SQLContext {
                                      unsafeBitCast(box, to: UnsafeMutableRawPointer.self)
         )
         traceHook = box
-        #else
+        #elseif SKIP && SKIP_SQL_KOTLIN
         self.traceHook = TraceHook(action: action, context: self) // need to retain or it will be garbage collected eventually
         // The Kotlin update mechanism is different; it uses a TraceHook implementation, and doesn't pass a context pointer
         SQLite3.sqlite3_trace_v2(db, SQLITE_TRACE_STMT, self.traceHook, nil)
@@ -295,7 +294,7 @@ public class SQLContext {
 
     #if !SKIP
     private typealias UpdateHook = UpdateAction
-    #else
+    #elseif SKIP && SKIP_SQL_KOTLIN
     private final class UpdateHook : sqlite3_update_hook {
         let updateAction: UpdateAction
 
@@ -333,7 +332,7 @@ public class SQLContext {
             }
         }
         _ = SQLite3.sqlite3_update_hook(db, callback, updateActionPtr)
-        #else
+        #elseif SKIP && SKIP_SQL_KOTLIN
         self.updateHook = UpdateHook(action: hook) // need to retain or it will be garbage collected eventually
         // The Kotlin update mechanism is different; it uses a SQLiteUpdateHookCallback implementation, and doesn't pass a userData pointer
         SQLite3.sqlite3_update_hook(db, self.updateHook, nil)
@@ -409,7 +408,7 @@ public class SQLContext {
     }
 }
 
-public struct SQLExpression {
+public struct SQLExpression: Sendable {
     public var parts: [(String, SQLValue?)] = []
 
     public init(_ sql: String, _ bindings: [SQLValue] = []) {
@@ -488,7 +487,7 @@ public class RowCursor<Row> : Sequence {
     public func makeIterator() -> RowIterator<Row> {
         RowIterator<Row>(statement: statement, creator: creator)
     }
-    #else
+    #elseif SKIP && SKIP_SQL_KOTLIN
     override var iterable: kotlin.collections.Iterable<Element> {
         AbstractIterable<Row> {
             RowIterator<Row>(statement: statement, creator: creator)
@@ -499,7 +498,7 @@ public class RowCursor<Row> : Sequence {
 
 #if !SKIP
 typealias RowIteratorType<T> = IteratorProtocol
-#else
+#elseif SKIP && SKIP_SQL_KOTLIN
 typealias RowIteratorType<T> = kotlin.collections.Iterator<Result<T, Error>>
 
 class AbstractIterable<T> : kotlin.collections.Iterable<Result<T, Error>> {
@@ -551,7 +550,7 @@ public class RowIterator<Row> : RowIteratorType<Row> {
             return Result.failure(error)
         }
     }
-    #else
+    #elseif SKIP && SKIP_SQL_KOTLIN
     var nextElement: Element? = nil
 
     override func next() -> Element {
@@ -583,7 +582,7 @@ public class RowIterator<Row> : RowIteratorType<Row> {
     #endif
 }
 
-#if SKIP
+#if SKIP && SKIP_SQL_KOTLIN
 /// The argument to `sqlite3_update_hook`
 public protocol sqlite3_update_hook : NativeCallback {
     // public typealias sqlite3_update_hook = @convention(c) (_ updateActionPtr: UnsafeMutableRawPointer?, _ operation: Int32, _ dbname: UnsafePointer<CChar>?, _ tblname: UnsafePointer<CChar>?, _ rowid: sqlite3_int64) -> ()

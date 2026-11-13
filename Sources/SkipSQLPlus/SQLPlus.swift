@@ -1,5 +1,4 @@
-// Copyright 2023–2025 Skip
-// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+// Copyright 2023–2026 Skip
 @_exported import SkipSQLCore
 
 extension SQLiteConfiguration {
@@ -8,9 +7,9 @@ extension SQLiteConfiguration {
     /// This will use the the vendored sqlite libraries that are provided by the operating system.
     /// The version will vary.
     public static let plus: SQLiteConfiguration = {
-        #if SKIP
+        #if SKIP && SKIP_SQL_KOTLIN
         SQLiteConfiguration(library: SQLPlusJNALibrary.shared)
-        #else
+        #elseif !SKIP
         SQLiteConfiguration(library: SQLPlusCLibrary.shared)
         #endif
     }()
