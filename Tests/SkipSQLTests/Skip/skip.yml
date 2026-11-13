@@ -1,8 +1,5 @@
 # Skip configuration for SkipSQLTests module
 
-# the blocks to add to the build.gradle.kts
-#build:
-#  contents:
-#    - block: 'dependencies'
-#      contents:
-#        - '// no new dependencies in SkipSQLKtTests'
+# Native Swift Testing on Android, like the native library modules under test
+skip:
+  mode: 'native'

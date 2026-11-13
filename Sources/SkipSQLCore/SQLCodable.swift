@@ -1,6 +1,6 @@
 // Copyright 2023–2026 Skip
 import Foundation
-#if SKIP
+#if SKIP && SKIP_SQL_KOTLIN
 import kotlin.reflect.full.companionObjectInstance
 #endif
 

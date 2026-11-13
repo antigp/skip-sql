@@ -7,9 +7,9 @@ extension SQLiteConfiguration {
     /// This will use the the vendored sqlite libraries that are provided by the operating system.
     /// The version will vary.
     public static let plus: SQLiteConfiguration = {
-        #if SKIP
+        #if SKIP && SKIP_SQL_KOTLIN
         SQLiteConfiguration(library: SQLPlusJNALibrary.shared)
-        #else
+        #elseif !SKIP
         SQLiteConfiguration(library: SQLPlusCLibrary.shared)
         #endif
     }()
