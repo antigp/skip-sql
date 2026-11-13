@@ -1,5 +1,4 @@
-// Copyright 2023–2025 Skip
-// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+// Copyright 2023–2026 Skip
 import Foundation
 #if SKIP
 import SkipFFI
@@ -12,7 +11,7 @@ import SkipFFI
 ///
 /// The default `platform` library uses the vendored sqlite libraries included
 /// with the operating system.
-/// - See: https://skip.tools/docs/modules/skip-sql/#sqlite-versions
+/// - See: https://skip.dev/docs/modules/skip-sql/#sqlite-versions
 public struct SQLiteConfiguration {
     public let library: SQLiteLibrary
 
