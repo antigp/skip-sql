@@ -1,7 +1,6 @@
-// Copyright 2023–2025 Skip
-// SPDX-License-Identifier: LGPL-3.0-only WITH LGPL-3.0-linking-exception
+// Copyright 2023–2026 Skip
 import Foundation
-#if SKIP
+#if SKIP && SKIP_SQL_KOTLIN
 import SkipFFI
 #endif
 
@@ -12,7 +11,7 @@ import SkipFFI
 ///
 /// The default `platform` library uses the vendored sqlite libraries included
 /// with the operating system.
-/// - See: https://skip.tools/docs/modules/skip-sql/#sqlite-versions
+/// - See: https://skip.dev/docs/modules/skip-sql/#sqlite-versions
 public struct SQLiteConfiguration {
     public let library: SQLiteLibrary
 
@@ -186,7 +185,7 @@ extension Data {
     var hexValue: String {
         #if !SKIP
         map { String(format: "%02x", $0) }.joined()
-        #else
+        #elseif SKIP && SKIP_SQL_KOTLIN
         platformValue.joinToString("") {
             java.lang.Byte.toUnsignedInt($0).toString(radix: 16).padStart(2, "0".get(0))
         }
@@ -311,12 +310,12 @@ internal func check(_ SQLite3: SQLiteLibrary, db: OpaquePointer?, code: Int32, p
     }
 }
 
-#if SKIP
+#if SKIP && SKIP_SQL_KOTLIN
 internal func strptr(_ ptr: OpaquePointer?) -> String? {
     guard let ptr = ptr else { return nil }
     return String(cString: ptr)
 }
-#else
+#elseif !SKIP
 internal func strptr(_ ptr: UnsafePointer<CChar>?) -> String? {
     guard let ptr = ptr else { return nil }
     return String(cString: ptr)
@@ -329,7 +328,7 @@ internal func strptr(_ ptr: UnsafePointer<UInt8>?) -> String? {
 #endif
 
 
-#if SKIP
+#if SKIP && SKIP_SQL_KOTLIN
 
 
 // MARK: SQLite Result Codes

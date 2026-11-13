@@ -1,7 +1,13 @@
-# skip.tools per-configuration file
+# Skip configuration for SkipSQL module
 
 #skip:
 #  package: 'skip.sql'
+
+# Native Swift on Android (Skip Fuse): no transpiled Kotlin side, so no second SQLite (libsqlext.so via CMake) in the APK.
+skip:
+  mode: 'native'
+  # nothing of skip-sql is called from Kotlin: no bridges
+  bridging: false
 
 # the blocks to add to the build.gradle.kts
 build:
